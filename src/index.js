@@ -3,7 +3,8 @@ const path = require('path');
 const dotenv = require("dotenv").config();
 const mongoose = require('mongoose');
 const connectDb = require('./configs/dbConnection');
-const errorHandler = require('./middleware/errorHandler')
+const errorHandler = require('./middleware/errorHandler');
+const validateTokenHandler = require('./middleware/validateTokenHandler');
 
 // connect to db
 connectDb();
@@ -19,10 +20,12 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use('/api/contacts', require("./routes/contactRoutes"));
+app.use('/api/users', require("./routes/userRoutes"));
 app.use(errorHandler);
+app.use(validateTokenHandler);
 
 // start server
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
-})
+});
